@@ -11,31 +11,6 @@ $base-font-size: {{ site.data.theme.base-font-size | default: '""' }};
 $text-color: {{ site.data.theme.text-color | default: '""' }};
 $link-color: {{ site.data.theme.link-color | default: '""' }};
 
-@mixin btn-cf($white, $cf-000){
-  color: #177245;
-  background-color: darken(#177245, 2%);
-  background-image: linear-gradient(lighten(#177245, 5%), darken(#177245, 2%));
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 4px 10px rgba(0, 0, 0, 0.12);
-
-  &:hover,
-  &.zeroclipboard-is-hover {
-    color: #263C29;
-    background-color: darken(#263C29, 4%);
-    background-image: linear-gradient((lighten(#263C29, 2%), darken(#263C29, 4%)));
-  }
-
-  &:active,
-  &.selected,
-  &.zeroclipboard-is-active {
-    background-color: darken($bg, 5%);
-    background-image: none;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-
-  &.selected:hover {
-    background-color: darken($bg, 10%);
-  }
-}
 
 /* theme colors pulled from config-theme-colors */
 {% assign btns = site.data.config-theme-colors | where_exp: "item","item.color != nil" %}
