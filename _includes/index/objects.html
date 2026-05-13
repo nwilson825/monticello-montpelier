@@ -1,7 +1,13 @@
 {%- assign section = include -%}
 {%- assign title = section.title -%}
 
-{%- comment -%} Manually mapping titles to fields to bypass YAML errors {%- endcomment -%}
+{%- comment -%} 
+  If there is no title, this is a ghost entry in theme.yml. 
+  We stop right here so no error message shows up.
+{%- endcomment -%}
+{% if title != nil and title != "" %}
+
+{%- comment -%} Map titles to fields to ensure buttons work even if YAML is finicky {%- endcomment -%}
 {% if title == "Featured Subjects" %}{% assign field = "subject" %}
 {% elsif title == "Locations" %}{% assign field = "location" %}
 {% elsif title == "Topics" %}{% assign field = "topic" %}
@@ -31,3 +37,5 @@
         <a class="btn btn-sm btn-outline-secondary mt-3" href="{{ '/browse.html' | relative_url }}">View All Items</a>
     </div>
 </div>
+
+{% endif %}
