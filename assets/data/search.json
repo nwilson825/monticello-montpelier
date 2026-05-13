@@ -1,0 +1,16 @@
+---
+# generate a search index of your collection
+layout: none
+---
+[
+  {% for item in site.data[site.metadata] %}
+  {
+    "id": {{ item.objectid | jsonify }},
+    "title": {{ item.title | jsonify }},
+    "description": {{ item.description | jsonify }},
+    "subject": {{ item.subject | jsonify }},
+    "location": {{ item.location | jsonify }},
+    "link": "{{ '/items/' | append: item.objectid | append: '.html' | relative_url }}"
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
