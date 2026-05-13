@@ -48,20 +48,23 @@ function filterItems(arr, q) {
     loadingIcon.classList.remove("d-none");
     
     var query = q.trim().toUpperCase();
+    // Remove prefixes if they exist (handles 'location:Monticello' or just 'Monticello')
+    if (query.includes(":")) { query = query.split(":")[1]; }
+    
     var filteredItems = [];
-    var isFielded = query.includes(":");
-    var fName = isFielded ? query.split(":")[0].toLowerCase() : null;
-    var fTarget = isFielded ? query.split(":")[1] : query;
 
     for (var i = 0; i < arr.length; i++) {
         if (query == "") {
             filteredItems.push(arr[i]);
-        } else if (isFielded && arr[i][fName]) {
-            if (arr[i][fName].toUpperCase().indexOf(fTarget) != -1) { filteredItems.push(arr[i]); }
         } else {
-            var val = "";
-            for (var k in arr[i]) { if (arr[i][k]) { val += arr[i][k].toString() + " "; } }
-            if (val.toUpperCase().indexOf(query) != -1) { filteredItems.push(arr[i]); }
+            // Check for specific hardcoded matches for your locations
+            var itemLoc = arr[i]["location"] ? arr[i]["location"].toUpperCase() : "";
+            var itemSub = arr[i]["subject"] ? arr[i]["subject"].toUpperCase() : "";
+            
+            // If the query matches the location OR the subject, show it
+            if (itemLoc.indexOf(query) != -1 || itemSub.indexOf(query) != -1) {
+                filteredItems.push(arr[i]);
+            }
         }
     }
 
