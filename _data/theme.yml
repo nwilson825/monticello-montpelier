@@ -106,6 +106,13 @@ font-cdn: # add font stylesheet, e.g. <link href="https://fonts.googleapis.com/c
 #   arrow-right: arrow-right
 #   arrow-down: arrow-down
 
+##########
+# BROWSE PAGE
+#
+# set the fields to be used for the search/filter box on the browse page
+# these must match the field names in your config-browse.csv
+search-fields: subject, location, title, description
+
 home-sections:
   - include: index/objects.html
     field: subject
