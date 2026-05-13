@@ -1,7 +1,7 @@
 field,index,display,facet,search
-title,true,true
-date,true,true
-creator,true,false
-description,true,true
-subject,true,true
-location,true,true
+title,true,true,false,true
+date,true,true,false,false
+creator,true,false,false,false
+description,true,true,false,true
+subject,true,true,true,true
+location,true,true,true,true
