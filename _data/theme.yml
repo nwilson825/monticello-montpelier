@@ -106,7 +106,8 @@ font-cdn: # add font stylesheet, e.g. <link href="https://fonts.googleapis.com/c
 #   arrow-right: arrow-right
 #   arrow-down: arrow-down
 
-- include: index/objects.html
+home-sections:
+  - include: index/objects.html
     field: subject
     title: Featured Subjects
     btn-color: primary
