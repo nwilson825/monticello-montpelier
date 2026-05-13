@@ -125,4 +125,4 @@ home-sections:
   - include: index/objects.html
     field: topic
     title: Topics
-    btn-color: primary
+    btn-color: info
