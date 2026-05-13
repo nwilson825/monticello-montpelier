@@ -64,25 +64,42 @@ function makeCard(obj) {
 }
 
 /* filter items function */
-    function filterItems(arr,q) {
+    function filterItems(arr, q) {
     loadingIcon.classList.remove("d-none");
-    if (q=="") { 
-        var filteredItems = arr; 
+    if (q == "") {
+        var filteredItems = arr;
     } else {
-        q = q.trim().toUpperCase(); 
         var filteredItems = [];
+        // Check if the query is a fielded search (e.g., "location:Monticello")
+        var isFielded = q.includes(":");
+        var searchField = isFielded ? q.split(":")[0].toLowerCase() : null;
+        var searchTarget = isFielded ? q.split(":")[1].toUpperCase().trim() : q.toUpperCase().trim();
+
         for (var i = 0, len = arr.length; i < len; i++) {
-            var val = "";
-            for (var k in arr[i]) { 
-                // This combines every field into one searchable string
-                if (arr[i][k]) { val += arr[i][k].toString() + " "; }
+            var match = false;
+            if (isFielded && arr[i][searchField]) {
+                // Exact column search
+                if (arr[i][searchField].toUpperCase().indexOf(searchTarget) != -1) { match = true; }
+            } else {
+                // Global search
+                var val = "";
+                for (var k in arr[i]) {
+                    if (arr[i][k]) { val += arr[i][k].toString() + " "; }
+                }
+                if (val.toUpperCase().indexOf(searchTarget) != -1) { match = true; }
             }
-            // Check if the query exists anywhere in the record
-            if(val.toUpperCase().indexOf(q) != -1){
-                filteredItems.push(arr[i]);
-            }
+            if (match) { filteredItems.push(arr[i]); }
         }
     }
+    
+    document.querySelector("#numberOf").innerHTML = filteredItems.length + " of " + items.length + " items";
+    var cards = "";
+    for (var i = 0, len = filteredItems.length; i < len; i++) {
+        cards += makeCard(filteredItems[i]);
+    }
+    browseItemsDiv.innerHTML = cards;
+    loadingIcon.classList.add("d-none");
+}
     // Update the UI
     document.querySelector("#numberOf").innerHTML = filteredItems.length + " of " + items.length + " items";
     var cards = "";
