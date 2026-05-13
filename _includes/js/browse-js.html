@@ -1,12 +1,7 @@
 {%- if site.data.theme.icons -%}{% assign icons = site.data.theme.icons %}{% else %}
 {% assign cb_icons = site.pages | where: "name","cb-icons.svg" | first %}
 {% assign icons = cb_icons.icons %}{%- endif -%}
-{% if site.data.theme.browse-child-objects == true %}
-{%- assign items = site.data[site.metadata] | where_exp: 'item','item.objectid' -%}
-{% else %}
-{%- assign items = site.data[site.metadata] | where_exp: 'item','item.objectid' | where_exp: 'item','item.parentid == nil' -%}
-{% endif %}
-{%- assign fields = site.data.config-browse -%}
+{%- assign items = site.data[site.metadata] | where_exp: 'item', 'item.objectid != nil' -%}
 <script>
 
 /* add items */
