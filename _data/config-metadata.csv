@@ -3,13 +3,13 @@ title,Title,
 creator,Creator,
 date,Date Created,
 description,Description,
-subject,Subjects,true
+subject,Subjects
+topic,Topic
 location,Location
-latitude,Latitude
-longitude,Longitude
 source,Source
 identifier,Source Identifier,,
 type,Type,
 format,Format,
 rights,Rights,
+photographer,Photographer
 rightsstatement,Rights Statement,,true
