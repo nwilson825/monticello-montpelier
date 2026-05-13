@@ -4,3 +4,4 @@ creator,Creator,,,Creator,Creator
 person,Person,,,Person,Person
 location,Location,,,Location Depicted,Location Depicted
 topic,Topic,,,Topic,Topic
+subject,Subject,true,,,Subject
