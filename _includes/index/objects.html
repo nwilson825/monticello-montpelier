@@ -1,34 +1,32 @@
-{%- assign formats = site.data[site.metadata] | where_exp: 'item','item.parentid == nil' | map: "format" -%}
-{%- assign types = "image;audio;video;pdf;record;compound_object;multiple" | split: ";" -%}
-<div class="card mb-3" >
-    <div class="card-body">
-        <h5 class="card-title">Objects</h5>
+{%- comment -%} 
+    Get the section configuration from theme.yml 
+{%- endcomment -%}
+{%- assign section = include -%}
+{%- assign field = section.field -%}
+
+<div class="card mb-3">
+    <div class="card-body text-center">
+        <h5 class="card-title">{{ section.title }}</h5>
         <p class="card-text">
-            {% for t in types %}
-            {%- assign count = formats | where_exp: 'item','item contains t' | size -%}
-            {% if count > 0 %}
-            {{ count }}
-            {% case t %}
-            {% when 'image' %} 
-            <a class="text-dark" href="{{ 'image' | prepend: '/browse.html#' | relative_url }}">Image{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-image"/></svg></a><br>
-            {% when 'audio' %}
-            <a class="text-dark" href="{{ 'audio' | prepend: '/browse.html#' | relative_url }}">Audio File{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-audio"/></svg></a><br>
-            {% when 'video' %}
-            <a class="text-dark" href="{{ 'video' | prepend: '/browse.html#' | relative_url }}">Video{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-video"/></svg></a><br>
-            {% when 'pdf' %}
-            <a class="text-dark" href="{{ 'pdf' | prepend: '/browse.html#' | relative_url }}">PDF{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-pdf"/></svg></a><br>
-            {% when 'record' %}
-            <a class="text-dark" href="{{ 'record' | prepend: '/browse.html#' | relative_url }}">Record{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-record"/></svg></a><br>
-            {% when 'compound_object' %}
-            <a class="text-dark" href="{{ 'compound_object' | prepend: '/browse.html#' | relative_url }}">Compound Object{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-compound-object"/></svg></a><br>
-            {% when 'multiple' %}
-            <a class="text-dark" href="{{ 'multiple' | prepend: '/browse.html#' | relative_url }}">Multiple{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-multiple"/></svg></a><br>
+            {% if field %}
+                {%- comment -%} 
+                    Gather all unique values from the specified field 
+                {%- endcomment -%}
+                {%- assign raw_values = site.data[site.metadata] | map: field | join: ";" | split: ";" -%}
+                {%- assign unique_values = raw_values | compact | uniq | sort -%}
+
+                {% for val in unique_values %}
+                    {% if val != "" %}
+                    <a class="btn btn-sm btn-{{ section.btn-color | default: 'primary' }} m-1" 
+                       href="{{ '/browse.html' | relative_url }}#{{ field | url_encode }}:{{ val | url_encode }}">
+                        {{ val }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
             {% else %}
-            <a class="text-dark" href="{{ 'pdf' | prepend: '/browse.html#' | relative_url }}">File{% if count > 1 %}s{% endif %} <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-default"/></svg></a><br>
-            {% endcase %}
+                <span class="text-muted">No field specified in theme.yml</span>
             {% endif %}
-            {%- endfor -%}
-            <a class="btn btn-sm btn-outline-secondary mt-2" href="{{ '/data.html' | relative_url }}">View table</a>
         </p>
+        <a class="btn btn-sm btn-outline-secondary mt-3" href="{{ '/browse.html' | relative_url }}">View All Items</a>
     </div>
 </div>
