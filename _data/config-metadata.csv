@@ -6,10 +6,8 @@ description,Description,
 subject,Subjects
 topic,Topic
 location,Location
-source,Source
-identifier,Source Identifier,,
-type,Type,
-format,Format,
 photographer,Photographer
+identifier,Source Identifier,,
+format,Format,
+filename,File,
 rights,Rights,
-rightsstatement,Rights Statement,,true
