@@ -122,3 +122,7 @@ home-sections:
     field: location
     title: Locations
     btn-color: primary
+  - include: index/objects.html
+    field: topic
+    title: Topics
+    btn-color: primary
