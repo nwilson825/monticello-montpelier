@@ -48,7 +48,7 @@ function filterItems(arr, q) {
     loadingIcon.classList.remove("d-none");
     
     var query = q.trim().toUpperCase();
-    // Remove prefixes if they exist (handles 'location:Monticello' or just 'Monticello')
+    // Clean up any colons from the button links
     if (query.includes(":")) { query = query.split(":")[1]; }
     
     var filteredItems = [];
@@ -57,17 +57,28 @@ function filterItems(arr, q) {
         if (query == "") {
             filteredItems.push(arr[i]);
         } else {
-            // Check for specific hardcoded matches for your locations
-            var itemLoc = arr[i]["location"] ? arr[i]["location"].toUpperCase() : "";
-            var itemSub = arr[i]["subject"] ? arr[i]["subject"].toUpperCase() : "";
-            
-            // If the query matches the location OR the subject, show it
-            if (itemLoc.indexOf(query) != -1 || itemSub.indexOf(query) != -1) {
-                filteredItems.push(arr[i]);
+            var match = false;
+            for (var key in arr[i]) {
+                // EXCLUDE Title and Description from the search
+                // This stops 'Monticello' from matching every item via the title
+                if (key.toLowerCase() !== "title" && key.toLowerCase() !== "description") {
+                    var cellValue = arr[i][key] ? arr[i][key].toString().toUpperCase() : "";
+                    if (cellValue.indexOf(query) != -1) {
+                        match = true;
+                        break; 
+                    }
+                }
             }
+            if (match) { filteredItems.push(arr[i]); }
         }
     }
 
+    document.querySelector("#numberOf").innerHTML = filteredItems.length + " of " + items.length + " items";
+    var cards = "";
+    for (var i = 0; i < filteredItems.length; i++) { cards += makeCard(filteredItems[i]); }
+    browseItemsDiv.innerHTML = cards;
+    loadingIcon.classList.add("d-none");
+}
     document.querySelector("#numberOf").innerHTML = filteredItems.length + " of " + items.length + " items";
     var cards = "";
     for (var i = 0; i < filteredItems.length; i++) { cards += makeCard(filteredItems[i]); }
