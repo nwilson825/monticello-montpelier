@@ -1,32 +1,42 @@
 {%- comment -%} 
-    Get the section configuration from theme.yml 
+    CollectionBuilder Button Generator
+    This file creates the "Featured" boxes on the homepage. 
+    It reads the 'field' and 'title' from the home-sections list in _data/theme.yml.
 {%- endcomment -%}
+
 {%- assign section = include -%}
 {%- assign field = section.field -%}
 
 <div class="card mb-3">
     <div class="card-body text-center">
         <h5 class="card-title">{{ section.title }}</h5>
-        <p class="card-text">
+        <div class="card-text">
             {% if field %}
                 {%- comment -%} 
-                    Gather all unique values from the specified field 
+                    1. Get the items from your CSV 
+                    2. Map the specific field (subject, location, or topic)
+                    3. Split by semicolon, remove blanks, and sort alphabetically
                 {%- endcomment -%}
-                {%- assign raw_values = site.data[site.metadata] | map: field | join: ";" | split: ";" -%}
+                {%- assign items = site.data[site.metadata] | where_exp: 'item', 'item.objectid != nil' -%}
+                {%- assign raw_values = items | map: field | join: ";" | split: ";" -%}
                 {%- assign unique_values = raw_values | compact | uniq | sort -%}
 
                 {% for val in unique_values %}
-                    {% if val != "" %}
+                    {% if val != "" and val != nil %}
+                    {%- comment -%} 
+                        The link sends just the word to the Browse page. 
+                        Our Safe Mode Browse page then filters by that word.
+                    {%- endcomment -%}
                     <a class="btn btn-sm btn-{{ section.btn-color | default: 'primary' }} m-1" 
-                       href="{{ '/browse.html' | relative_url }}#{{ field | url_encode }}:{{ val | url_encode }}">
-                        {{ val }}
+                       href="{{ '/browse.html' | relative_url }}#{{ val | strip | url_encode }}">
+                        {{ val | strip }}
                     </a>
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <span class="text-muted">No field specified in theme.yml</span>
+                <span class="text-muted">No field specified in theme.yml. Check your indentation under home-sections.</span>
             {% endif %}
-        </p>
+        </div>
         <a class="btn btn-sm btn-outline-secondary mt-3" href="{{ '/browse.html' | relative_url }}">View All Items</a>
     </div>
 </div>
