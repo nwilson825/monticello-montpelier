@@ -1,41 +1,47 @@
+{%- comment -%} 
+  ULTIMATE "GHOST BOX" KILLER VERSION
+  This version will not render ANYTHING (not even a blank box) 
+  unless it has a valid field to pull data from.
+{%- endcomment -%}
+
 {%- assign section = include -%}
 {%- assign title = section.title -%}
+{%- assign field = section.field -%}
 
 {%- comment -%} 
-  If there is no title, this is a ghost entry in theme.yml. 
-  We stop right here so no error message shows up.
+  1. Detect the field. If theme.yml is broken, we use the title to guess.
 {%- endcomment -%}
-{% if title != nil and title != "" %}
+{% if field == nil or field == "" %}
+    {% if title contains "Subject" %}{% assign field = "subject" %}
+    {% elsif title contains "Location" %}{% assign field = "location" %}
+    {% elsif title contains "Topic" %}{% assign field = "topic" %}
+    {% endif %}
+{% endif %}
 
-{%- comment -%} Map titles to fields to ensure buttons work even if YAML is finicky {%- endcomment -%}
-{% if title == "Featured Subjects" %}{% assign field = "subject" %}
-{% elsif title == "Locations" %}{% assign field = "location" %}
-{% elsif title == "Topics" %}{% assign field = "topic" %}
-{% else %}{% assign field = section.field %}{% endif %}
-
+{%- comment -%} 
+  2. ONLY RENDER IF FIELD EXISTS 
+  If there is no field and no title, the code below simply won't run, 
+  making the ghost box invisible.
+{%- endcomment -%}
+{% if field != nil and field != "" %}
 <div class="card mb-3">
     <div class="card-body text-center">
-        <h5 class="card-title">{{ title }}</h5>
+        <h5 class="card-title">{{ title | default: field | capitalize }}</h5>
         <div class="card-text">
-            {% if field %}
-                {%- assign items = site.data[site.metadata] | where_exp: 'item', 'item.objectid != nil' -%}
-                {%- assign raw_values = items | map: field | join: ";" | split: ";" -%}
-                {%- assign unique_values = raw_values | compact | uniq | sort -%}
+            {%- assign items = site.data[site.metadata] | where_exp: 'item', 'item.objectid != nil' -%}
+            {%- assign raw_values = items | map: field | join: ";" | split: ";" -%}
+            {%- assign unique_values = raw_values | compact | uniq | sort -%}
 
-                {% for val in unique_values %}
-                    {% if val != "" and val != nil %}
-                    <a class="btn btn-sm btn-{{ section.btn-color | default: 'primary' }} m-1" 
-                       href="{{ '/browse.html' | relative_url }}#{{ val | strip | url_encode }}">
-                        {{ val | strip }}
-                    </a>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <span class="text-muted">Error: Could not find field for "{{ title }}".</span>
-            {% endif %}
+            {% for val in unique_values %}
+                {% if val != "" and val != nil %}
+                <a class="btn btn-sm btn-{{ section.btn-color | default: 'primary' }} m-1" 
+                   href="{{ '/browse.html' | relative_url }}#{{ val | strip | url_encode }}">
+                    {{ val | strip }}
+                </a>
+                {% endif %}
+            {% endfor %}
         </div>
         <a class="btn btn-sm btn-outline-secondary mt-3" href="{{ '/browse.html' | relative_url }}">View All Items</a>
     </div>
 </div>
-
 {% endif %}
