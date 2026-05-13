@@ -105,3 +105,13 @@ font-cdn: # add font stylesheet, e.g. <link href="https://fonts.googleapis.com/c
 #   arrow-left: arrow-left
 #   arrow-right: arrow-right
 #   arrow-down: arrow-down
+
+home-sections:
+  - include: index/objects.html
+    field: subject
+    title: Featured Subjects
+    btn-color: primary
+  - include: index/objects.html
+    field: location
+    title: Locations
+    btn-color: primary
